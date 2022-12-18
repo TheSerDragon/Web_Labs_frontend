@@ -1,0 +1,31 @@
+.web-service-title {
+    font-size: xx-large;
+    color: #2a3fff;
+    padding-inline-start: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.navbar{
+    font-size: 34px;
+    font-weight: bold;
+    color: #2a3fff;
+    text-align: center;
+}
+
+.list-of-links {
+    padding-inline-start: 5px;
+}
+
+.site-navigator {
+    margin-top: 30px;
+}
+
+.PS {
+    width: 200px;
+    height: 200px;
+    border-radius: 28px;
+    box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.25);
+    display: block;
+    margin: auto;
+}
