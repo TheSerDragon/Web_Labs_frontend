@@ -9,6 +9,10 @@ const initialState = {
         },
         App: {
             userAuthorized: false,
+            userIsManager: false,
+            orderStatuses: [],
+            gamePublishers: [],
+            gameGenres: [],
             userCart: [],
             userOrders: [],
         }

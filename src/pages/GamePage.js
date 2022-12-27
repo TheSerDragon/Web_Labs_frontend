@@ -7,6 +7,7 @@ import HorizontalList from "../components/ListGroup";
 import BasicBreadcrumbs from "../components/Breadcrumbs";
 import {useDispatch, useSelector} from "react-redux";
 import fetchGameInfo from "../store/middlewares/GamePageMiddlewares";
+import api_socket from "../network";
 
 
 function GamePage() {
@@ -27,7 +28,7 @@ function GamePage() {
         let order_id = undefined
         if (user_cart.length === 0) {
             // нужно сделать запрос GET /current_cart/
-            const get_cart_res = await (await fetch('http://localhost:8000/current_cart/', {
+            const get_cart_res = await (await fetch(`http://${api_socket}/current_cart/`, {
                 credentials: "include",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
@@ -38,7 +39,7 @@ function GamePage() {
                 }
             })).json()
             order_id = get_cart_res[0].id
-            const add_to_cart = await (await fetch('http://localhost:8000/cart/', {
+            const add_to_cart = await (await fetch(`http://${api_socket}/cart/`, {
                 method: 'POST',
                 credentials: "include",
                 headers: {
@@ -61,7 +62,7 @@ function GamePage() {
         const shoold_add = user_cart.filter(item => item.game_id.id === game.id_game).length === 0
         if (shoold_add) {
             // осталось сделать POST /cart/ с параметрами order_id и game_id
-            const add_to_cart = await (await fetch('http://localhost:8000/cart/', {
+            const add_to_cart = await (await fetch(`http://${api_socket}/cart/`, {
                 method: 'POST',
                 credentials: "include",
                 headers: {
@@ -113,7 +114,7 @@ function GamePage() {
                                 <>
                                     <Row xs={1} md={1} sm={1} lg={2} className="grid">
                                         <Col  className={"img"}>
-                                            <img src={`http://localhost:3000/${game.game_image}`}
+                                            <img src={`http://${window.location.host}/${game.game_image}`}
                                                  alt={"game"} className={"game-img"} />
                                         </Col>
                                         <Col className={"info"}>

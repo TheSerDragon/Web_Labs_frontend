@@ -12,6 +12,7 @@ import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {createAction_setUserStatus} from "../store/actionCreators/AppActionsCreators";
 import {useHistory} from "react-router";
+import api_socket from "../network";
 
 const theme = createTheme();
 
@@ -30,7 +31,7 @@ export default function SignIn() {
             password: data.get('password'),
         }
         fetch(
-            'http://localhost:8000/login/',
+            `http://${api_socket}/login/`,
             {
                 method: 'POST',
                 credentials: "include",

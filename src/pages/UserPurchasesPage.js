@@ -1,12 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {fetchUserOrders} from "../store/middlewares/AppMiddlewares";
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import { user_is_manager } from "../modules";
+import {Col, Row} from "react-bootstrap";
+import OrderCard from "../components/OrderCard";
 
 
 function UserPurchasesPage() {
@@ -16,79 +13,34 @@ function UserPurchasesPage() {
     const loadingStatus = useSelector(state => state.ui.OrdersPage.loadingStatus)
     const dispatch = useDispatch()
 
-    const [open, setOpen] = useState(new Map());
-
     useEffect(() => {
 
         if (userStatus) dispatch(fetchUserOrders())
 
     }, [userStatus])
 
-    useEffect(() => {
-
-        if (userOrders.length > 0) {
-            let new_state = open
-            userOrders.forEach((order, index) => {
-                new_state.set(index, false)
-            })
-            setOpen(new_state)
-            console.log(open)
-        }
-
-    }, [userOrders])
-
     return (
         <>
             {!userStatus ? <div style={{marginTop: "10px", fontSize: "20px"}}>
                     Пожалуйста, авторизуйтесь для просмотра вашего списка заказов</div>:
-                <div style={{marginTop: "10px", fontSize: "20px"}}>
+                <div style={{marginTop: "10px", fontSize: "20px", width: "100%"}}>
                     <div style={{textAlign: "center"}}>Ваши заказы</div>
-                    {loadingStatus ? <></> :
-                        <>
-                            {userOrders.length === 0 ? <div style={{textAlign: "center"}}>У Вас пока нет заказов!</div>:
-                                <>
-                                    <List
-                                        sx={{bgcolor: 'background.paper'}}
-                                        component="nav"
-                                        aria-labelledby="nested-list-subheader"
-                                    >
-                                        {userOrders.map((order, index) => {
-                                            return (
-                                                <>
-                                                    <ListItemButton id={order.id} key={index} onClick={ e => {
-                                                        e.preventDefault()
-                                                        setOpen(open.set(index, !open.get(index)))
-                                                        console.log(open.get(index))
-                                                    }}>
-                                                        <ListItemText
-                                                            primary={`Заказ №${order.id}
-                                                            от ${new Date(order.order_date).toLocaleString()}
-                                                            общей стоимостью: ${order.order_price_sum} ₽
-                                                            Cтатус: ${order.order_statusid.order_status_name}`}
-                                                        />
-                                                    </ListItemButton>
-                                                    <div>
-                                                        {order.ordered_game.map((game, ind) => {
-                                                            return (
-                                                                <div style={{display: "flex", marginLeft: '50px',
-                                                                    justifyContent:"space-between"}}>
-                                                                    <ListItemText
-                                                                        primary={`${game.game_id.game_name}`}
-                                                                    />
-                                                                    <ListItemText
-                                                                        primary={`${game.game_id.price} ₽`}
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        })}
-                                                    </div>
-                                                </>
-                                            )
-                                        })}
-                                    </List>
-                                </>
+                    {loadingStatus ? undefined :
+                        <div className={"container"}>
+                            {userOrders.length === 0 ? <div>У вас пока нет заказов!</div>:
+                                <Row xs={1} md={1} sm={1} lg={1} className="grid">
+                                    {userOrders.map((item, index) => {
+                                        return(
+                                            <Col key={index}>
+                                                <OrderCard is_manager={user_is_manager()}
+                                                           order={item}
+                                                           manager_page={false}/>
+                                            </Col>
+                                        )
+                                    })}
+                                </Row>
                             }
-                        </>
+                        </div>
                     }
                 </div>
             }

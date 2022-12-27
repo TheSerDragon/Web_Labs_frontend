@@ -1,7 +1,7 @@
 import {configureStore} from "@reduxjs/toolkit";
 import * as StartPageMiddlewares from "./middlewares/StartPageMiddlewares";
 import fetchGameInfo from "./middlewares/GamePageMiddlewares";
-import {fetchUserCart, fetchUserOrders} from "./middlewares/AppMiddlewares";
+import {fetchUserCart, fetchUserOrders, fetchOrderStatuses, fetchManagerOrders} from "./middlewares/AppMiddlewares";
 import rootReducer from "./reducers/RootReducer";
 
 
@@ -11,6 +11,8 @@ const myMiddlewares = [
     fetchGameInfo,
     fetchUserCart,
     fetchUserOrders,
+    fetchOrderStatuses,
+    fetchManagerOrders
 ]
 
 const store = configureStore({

@@ -13,6 +13,7 @@ import {Spinner} from "react-bootstrap";
 import {useHistory} from "react-router";
 import {createAction_setUserStatus} from "../store/actionCreators/AppActionsCreators";
 import {useDispatch} from "react-redux";
+import api_socket from "../network";
 
 
 const theme = createTheme();
@@ -38,14 +39,14 @@ export default function SignUp() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(reg_data)
         };
-        fetch(`http://localhost:8000/reg_new_user/`, requestOptions)
+        fetch(`http://${api_socket}/reg_new_user/`, requestOptions)
             .then(async response => {
                 response = await response.json()
                 console.log(response)
                 if (response.success === 'NEW_USER_CREATED') {
                     // запрос на авторизацию
                     const try_login = await fetch(
-                        'http://localhost:8000/login/',
+                        `http://${api_socket}/login/`,
                         {
                             method: 'POST',
                             credentials: "include",

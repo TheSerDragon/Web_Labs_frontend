@@ -33,6 +33,35 @@ export const createAction_addToUserCartGame = (value) => {
     }
 }
 
+export const createAction_setOrderStatuses = (value) => {
+    return {
+        type: AppActions.setOrderStatuses,
+        value: value
+    }
+}
+
+export const createAction_setGamePublishers = (value) => {
+    return {
+        type: AppActions.setGamePublishers,
+        value: value
+    }
+}
+
+export const createAction_setGameGenres = (value) => {
+    return {
+        type: AppActions.setGameGenres,
+        value: value
+    }
+}
+
+
+export const createAction_setUserManagerStatus = (value) => {
+    return {
+        type: AppActions.setUserManagerStatus,
+        value: value
+    }
+}
+
 
 export const createAction_setUserStatus = (value) => {
     return {

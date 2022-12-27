@@ -11,10 +11,12 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import {useDispatch, useSelector} from "react-redux";
 import {
-    createAction_addToAppBarLinks, createAction_deleteFromAppBarLinks,
+    createAction_addToAppBarLinks, createAction_deleteFromAppBarLinks, createAction_setUserManagerStatus,
     createAction_setUserStatus
 } from "../store/actionCreators/AppActionsCreators"
 import {useHistory} from "react-router";
+import { user_is_manager } from "../modules.js"
+import api_socket from "../network";
 
 
 function ResponsiveAppBar() {
@@ -22,6 +24,7 @@ function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const default_pages = useSelector(state => state.ui.App.AppBarLinks)
     const userStatus = useSelector(state => state.cached_data.App.userAuthorized)
+    const userIsManager = useSelector(state => state.cached_data.App.userIsManager)
     const dispatch = useDispatch()
     const history = useHistory()
     const handleOpenNavMenu = (event) => {
@@ -35,7 +38,7 @@ function ResponsiveAppBar() {
     const handleLoginLogoutBtnClick = event => {
         event.preventDefault()
         if (userStatus) {
-            fetch('http://localhost:8000/logout/',
+            fetch(`http://${api_socket}/logout/`,
                 {
                     credentials: "include"
                 })
@@ -49,13 +52,19 @@ function ResponsiveAppBar() {
 
     useEffect(() => {
 
-        if (userStatus) dispatch(createAction_addToAppBarLinks([
-            { title: 'Корзина', link: '/cart' },
-            { title: 'Заказы', link: '/purchases' },
-        ]))
+        if (userStatus) {
+            dispatch(createAction_addToAppBarLinks([
+                { title: 'Моя корзина', link: '/cart' },
+                { title: 'Мои заказы', link: '/purchases' },
+            ]))
+            if (user_is_manager()) dispatch(createAction_addToAppBarLinks([
+                { title: 'Панель менеджера', link: '/manager' }
+            ]))
+        }
         else {
-            dispatch(createAction_deleteFromAppBarLinks('Корзина'))
-            dispatch(createAction_deleteFromAppBarLinks('Заказы'))
+            dispatch(createAction_deleteFromAppBarLinks('Моя корзина'))
+            dispatch(createAction_deleteFromAppBarLinks('Мои заказы'))
+            dispatch(createAction_deleteFromAppBarLinks('Панель менеджера'))
         }
 
     }, [userStatus])

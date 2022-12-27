@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import "../styles/GameCardStyle.css";
 import {useDispatch, useSelector} from "react-redux";
 import {createAction_setUserCart} from "../store/actionCreators/AppActionsCreators";
+import api_socket from "../network";
 
 const CartGameCards = (Game) => {
     console.log(Game)
@@ -17,7 +18,7 @@ const CartGameCards = (Game) => {
         setbtnLoading(true)
         console.log(user_cart)
         const record_to_delete = user_cart.filter(item => item.game_id.id_game === Game.id_game)[0].id
-        await fetch(`http://localhost:8000/cart/${record_to_delete}/`, {
+        await fetch(`http://${api_socket}/cart/${record_to_delete}/`, {
             method: 'DELETE',
             credentials: "include",
             headers: {
@@ -35,7 +36,7 @@ const CartGameCards = (Game) => {
     return (
         <Card>
             <Link to={`/games/${Game.id_game}`}>
-                <Card.Img variant="top" src={`http://localhost:3000/${Game.game_image}`}/>
+                <Card.Img variant="top" src={`http://${window.location.host}/${Game.game_image}`}/>
             </Link>
             <Card.Body>
                 <Link to={`/games/${Game.id_game}`}>

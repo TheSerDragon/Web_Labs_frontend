@@ -5,6 +5,7 @@ import "../styles/StartPageStyle.css";
 import CartGameCards from "../components/CartGameCards";
 import {fetchUserCart} from "../store/middlewares/AppMiddlewares";
 import {useHistory} from "react-router";
+import api_socket from "../network";
 
 
 function UserCartPage() {
@@ -59,10 +60,11 @@ function UserCartPage() {
                                                         .map(c => c.split('=')[1])[0]
                                                 },
                                                 body: JSON.stringify({
-                                                    order_statusid: 8
+                                                    order_statusid: 8,
+                                                    payment_date: new Date().toISOString()
                                                 })
                                             };
-                                            fetch(`http://localhost:8000/orders/${user_cart[user_cart.length - 1].order_id}/`, options)
+                                            fetch(`http://${api_socket}/orders/${user_cart[user_cart.length - 1].order_id}/`, options)
                                                 .then(response => response.json())
                                                 .then(response => console.log(response))
                                                 .catch(err => console.error(err));

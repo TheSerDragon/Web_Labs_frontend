@@ -7,6 +7,8 @@ import "../styles/StartPageStyle.css";
 import { useSelector, useDispatch } from 'react-redux';
 import * as StartPageActionCreators from "../store/actionCreators/StartPageActionCreators";
 import {fetchGameList, fetchStartPageData} from "../store/middlewares/StartPageMiddlewares";
+import {user_is_manager} from "../modules";
+import {fetchGenres, fetchPublishers} from "../store/middlewares/AppMiddlewares";
 
 
 function StartPage() {
@@ -16,11 +18,15 @@ function StartPage() {
     const slider_value = useSelector(state => state.ui.StartPage.sliderValue)
     const loadingStatus = useSelector(state => state.ui.StartPage.loadingStatus)
     const gameList = useSelector(state => state.cached_data.StartPage.gameList)
+    const publishers = useSelector(state => state.cached_data.App.gamePublishers)
+    const genres = useSelector(state => state.cached_data.App.gameGenres)
     const dispatch = useDispatch()
 
     useEffect(() => {
 
         dispatch(fetchStartPageData())
+        dispatch(fetchGenres())
+        dispatch(fetchPublishers())
 
     }, []);
 
@@ -49,7 +55,8 @@ function StartPage() {
             ]}/>
             <div className={"page-name"}>Список игр</div>
             <div className={`main-container ${loadingStatus && 'containerLoading'}`}>
-                {loadingStatus ? <div className={"hide-while-loading-page"}><Spinner animation={"border"}/></div>:
+                {loadingStatus || publishers.length === 0 || genres.length === 0 ?
+                    <div className={"hide-while-loading-page"}><Spinner animation={"border"}/></div> :
                     <>
                         {game_pricing[1] === 0 ? undefined:
                             <SearchAndFiltersGroup loading={loadingStatus} text_field_label={"Введите название игры"}
@@ -87,7 +94,9 @@ function StartPage() {
                                     {gameList.map((item, index) => {
                                         return(
                                             <Col key={index}>
-                                                <GameCard {...item}/>
+                                                <GameCard game={item}
+                                                           is_manager={user_is_manager()}
+                                                />
                                             </Col>
                                         )
                                     })}
